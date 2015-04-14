@@ -224,7 +224,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11486122, guid: 81389cd3f58feba4b9033f3fc8f906f1, type: 2}
       propertyPath: CurrentState
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 81389cd3f58feba4b9033f3fc8f906f1, type: 2}
@@ -459,6 +459,10 @@ Prefab:
     - target: {fileID: 147776, guid: 81389cd3f58feba4b9033f3fc8f906f1, type: 2}
       propertyPath: m_Name
       value: TeamMember 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 147776, guid: 81389cd3f58feba4b9033f3fc8f906f1, type: 2}
+      propertyPath: m_TagString
+      value: TeamMember2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 81389cd3f58feba4b9033f3fc8f906f1, type: 2}
