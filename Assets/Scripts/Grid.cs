@@ -3,14 +3,63 @@ using System.Collections;
 
 public class Grid : MonoBehaviour {
 
-	// Use this for initialization
+	public enum ObjectType {Empty, TeamMember, ProjectOwner, ScrumMaster, Wall};
+
+	private float tileWidth = 5.0f;
+	private float tileHeight = 5.0f;
+
+	private float gridHeight = 18.0f;
+	private float gridWidth = 32.0f;
+
+	private ObjectType[,] ObjectMap = new ObjectType[,]{
+		{ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Wall},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Wall},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Wall},
+		{ObjectType.Wall,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Empty,	ObjectType.Wall},
+		{ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Wall,	ObjectType.Empty},
+
+	};
+
+		// Use this for initialization
 	void Start () {
-		for(int x = 0; x < 5; x++)
+
+		generate ();
+	}
+
+	void generate(){
+
+		for(float x = -gridWidth/2; x < gridWidth/2; x++)
 		{
-			for(int y = 0; y < 5; y++)
+			for(float y = -gridHeight/2; y < gridHeight/2; y++)
 			{
 				GameObject obj = (GameObject)Instantiate(Resources.Load ("Prefabs/" + "GridTile"));
-				obj.transform.position = new Vector3(x, 0, y);
+				obj.transform.position = new Vector3(x*tileWidth, y*tileHeight, 10.0f);
+
+				try{
+					if(ObjectMap[(int)(y + gridHeight/2), (int)(x + gridWidth/2)] == ObjectType.Empty){
+//						print("y: " + (int)(x + gridWidth/2) + "x: " + (int)(-y - gridHeight/2));
+//				
+//						print("empty");
+					} else {
+						GameObject wall = (GameObject)Instantiate(Resources.Load ("Prefabs/" + "Wall"));
+						wall.transform.position = new Vector3(x*tileWidth, -y*tileHeight, 1.0f);
+					}
+				} catch (UnityException ex){
+				}
+
 			}
 		}
 	}
