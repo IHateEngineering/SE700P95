@@ -35,7 +35,11 @@ public class Grid : MonoBehaviour {
 
 		// Use this for initialization
 	void Start () {
-
+		TextAsset asset = Levels.TestLevel;
+		string[,] grid = CSVReader.SplitCsvGrid(asset.text);
+		Debug.Log("size = " + (1+ grid.GetUpperBound(0)) + "," + (1 + grid.GetUpperBound(1))); 
+		
+		CSVReader.DebugOutputGrid(grid); 
 		generate ();
 	}
 
