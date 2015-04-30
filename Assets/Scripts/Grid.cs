@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Grid : MonoBehaviour {
 
@@ -23,20 +24,25 @@ public class Grid : MonoBehaviour {
 		{
 			for(float y = -gridHeight/2; y < gridHeight/2; y++)
 			{
-				GameObject obj = (GameObject)Instantiate(Resources.Load ("Prefabs/" + "GridTile"));
-				obj.transform.position = new Vector3(x*tileWidth, y*tileHeight, 10.0f);
+				GameObject gridTile = (GameObject)Instantiate(Resources.Load (PrefabStrings.GridTile));
+				gridTile.transform.position = new Vector3(x*tileWidth, y*tileHeight, 10.0f);
 
+				GameObject obj = null;
 				try{
-					if(ObjectMap[(int)(x + gridWidth/2), (int)(y + gridHeight/2)] == "empty"){
-//						print("y: " + (int)(x + gridWidth/2) + "x: " + (int)(-y - gridHeight/2));
-//				
-//						print("empty");
-					} else {
-
-						GameObject wall = (GameObject)Instantiate(Resources.Load ("Prefabs/" + "Wall"));
-						wall.transform.position = new Vector3(x*tileWidth, -y*tileHeight - tileHeight, 1.0f);
+					string currentCSVString = ObjectMap[(int)(x + gridWidth/2), (int)(y + gridHeight/2)];
+					if(currentCSVString == CSVStrings.Empty){
+						//do nothing
+					} else if(currentCSVString == CSVStrings.Wall){
+						obj = (GameObject)Instantiate(Resources.Load (PrefabStrings.Wall));
+					}else if(currentCSVString == CSVStrings.ProjectOwner){
+						obj = (GameObject)Instantiate(Resources.Load (PrefabStrings.ProjectOwner));
+					}else if(currentCSVString == CSVStrings.ScrumMaster){
+						obj = (GameObject)Instantiate(Resources.Load (PrefabStrings.ScrumMaster));
+					}else if(currentCSVString == CSVStrings.TeamMember){
+						obj = (GameObject)Instantiate(Resources.Load (PrefabStrings.TeamMember));
 					}
-				} catch (UnityException ex){
+					obj.transform.position = new Vector3(x*tileWidth, -y*tileHeight - tileHeight, 1.0f);
+				} catch (Exception ex){
 				}
 
 			}
