@@ -23,5 +23,17 @@ public class Levels
 			return testLevel;
 		}
 	}
+
+	private static TextAsset testLevel2; 
+	public static TextAsset TestLevel2
+	{
+		get
+		{
+			if(testLevel == null){
+				testLevel = Resources.Load("Levels/TestLevel2") as TextAsset;
+			}
+			return testLevel;
+		}
+	}
 }
 
